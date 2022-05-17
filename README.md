@@ -1,14 +1,12 @@
 # Tutorial de minteo de NFTs en la blockchain de Solana
 
-Fuentes: 
+## Fuentes: 
 
 CMv2: 
 
 https://www.youtube.com/watch?v=-nUtsdxZvqM
 
-CMv1: 
-
-https://www.youtube.com/watch?v=yk6cPxvvgTg&t=3645s
+Metaplex Docs:
 
 https://docs.metaplex.com/candy-machine-v2/getting-started
 
@@ -171,9 +169,8 @@ La estructura es:
 
 14) Desde la carpeta metaplex\js, instalar dependencias de yarn con: 
 `yarn install //Si no funciona se le puede agregar --network-timeout 500000  `<br><br>
-Tarda un monton. (puede ser porque el antivirus chequea todos los archivos. en el sition de yarn dice: "Please whitelist your project folder and the Yarn cache directory (%LocalAppData%\Yarn) in your antivirus software, otherwise installing packages will be significantly slower as every single file will be scanned as it’s written to disk.")
+Tarda un monton. (puede ser porque el antivirus chequea todos los archivos. en el sition de yarn dice: "Please whitelist your project folder and the Yarn cache directory (%LocalAppData%\Yarn) in your antivirus software, otherwise installing packages will be significantly slower as every single file will be scanned as it’s written to disk.")<br><br>
 
-<mark>CHEQUEAR SI ES NECESARIO HACER YARN BOOSTRAP Y BUIL PARA DEPLOYAR LA CANDYMACHINE</mark>
 
 ## Deploy to CandyMachine <br><br>
 
@@ -216,7 +213,8 @@ uploaded (1) out of (1)
 ready to deploy!
 ```
 
-20) Mintear el token con:`ts-node .\packages\cli\src\candy-machine-v2-cli.ts mint_one_token -e devnet -k .\..\wallet.json -c cache`<br><br>
+20) Mintear el token con: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts mint_one_token -e devnet -k .\..\wallet.json -c cache`><br><br>
+Se puede usar también `ts-node candy-machine-v2-cli.ts mint_multiple_tokens -c cacheName -k ..\wallet.json -n 5`.<br>
 Debería dar:
 ```
 wallet public key: asdazdfgasrtb
@@ -225,12 +223,71 @@ No instructions provided
 mint_one_token finished q4A6zbRBv3QVLjnmPGA6ho1tLXsmuCDPXXbZsdfvsdfgsdfgdsfg
 ```
 
-## Retirar la renta
 
-21) `ts-node .\packages\cli\src\candy-machine-v2-cli.ts withdraw candyMachineID -e devnet -k ..\..\wallet.json`<br><br>
+## Withdraw rent
+
+<br>
+
+- `ts-node .\packages\cli\src\candy-machine-v2-cli.ts withdraw candyMachineID -e devnet -k ..\..\wallet.json`<br><br>
 
 ## Burn Token
-22) `spl-token burn - v TokenAccount 1` Hay que poner la direccion de la TOKEN ACCOUNT, no del token, ni de la cuenta que holdea el token address
+
+<br>
+
+- `spl-token burn -v TokenAccount 1` Hay que poner la direccion de la TOKEN ACCOUNT, no del token, ni de la cuenta que holdea el token address
+<br><br>
+Para ver las cuentas con detalle: `spl-token account -v`
+<br><br>
+
+## Close account
+
+<br>
+
+- `spl-token close -v TokenAccount` <br><br>
+
+## Hide and reveal 
+
+<br>
+
+- Bajar el repo https://github.com/MyNameisLeon/metaplex/tree/patch-1
+
+- En metaplex\js ejecutar: `yarn install` 
+
+- Subir un NFT con la imagen que queremos que sea la de todos los token a ocultar. No mintear. Withdrawear la CandyMachine.
+
+- Guardar la URI del campo de metadata.
+
+- Deployar otra CM con los NFTS verdaderosç agregando la seccion de hiddenSettings:
+
+<br>
+
+```
+ "hiddenSettings": {
+    "name":"Roman in the Sky ",
+    "uri":"https://arweave.net/hQwRKzZXvd7YpZhDteoqeaufB_79YBHfCypUiPoDIJw",
+    "hash":"euguachooalsdkaldfisdkdfkhbuhasd"
+},
+```
+
+<br>
+
+- Colocar en uri el link guardado previamente de la metadata (no el de la imagen)
+
+- Mintear todos los token e ir a la carpeta cache y crear dos archivos uno "devnet-before.json" y otro "devnet-after.json"<br><br>
+
+En before: 
+
+- Reemplazar el campo link por el valor guardado de la metadata previamente.
+- Cambiar el campo name por el colocado previamente en hiddenSettings ( 'nombre' + # )
+
+<br>
+
+Ejecutar el comando `ts-node candy-machine-v2-cli.ts update_existing_nfts_from_latest_cache_file -e devnet -nc after -c before -k ..\wallet.json 5`
+
+Ahora debería haberse reemplazado la imagen por la nueva
+
+
+
 
 
 
