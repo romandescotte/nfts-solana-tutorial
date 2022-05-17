@@ -224,7 +224,16 @@ No instructions provided
 No instructions provided
 mint_one_token finished q4A6zbRBv3QVLjnmPGA6ho1tLXsmuCDPXXbZsdfvsdfgsdfgdsfg
 ```
+<br>
 
+## Sign NFTs
+
+<br>
+
+- Primero setear la cuenta creadora con `solana config set -k .\wallet.json`
+- `ts-node .\packages\cli\src\candy-machine-v2-cli.ts sign_all -e devnet -k ..\..\wallet.json -c cacheName`
+
+<br>
 
 ## Withdraw rent
 
