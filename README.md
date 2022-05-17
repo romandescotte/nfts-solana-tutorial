@@ -6,6 +6,8 @@ CMv2:
 
 https://www.youtube.com/watch?v=-nUtsdxZvqM
 
+https://www.youtube.com/watch?v=KJOWBc0V4sE&t=4265
+
 Metaplex Docs:
 
 https://docs.metaplex.com/candy-machine-v2/getting-started
