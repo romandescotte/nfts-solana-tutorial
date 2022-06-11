@@ -69,7 +69,10 @@ Instalar actualizacioes con:
 
 4) Clonar metaplex: `git clone https://github.com/metaplex-foundation/metaplex.git ./metaplex`
 
-5) Instalar dependencias desde fuera del repo con: `yarn install --cwd .\metaplex\js\` <br><br>
+5) Instalar dependencias desde fuera del repo con: `yarn install --cwd .\metaplex\js\` 
+<br><br>
+Si no funciona se le puede agregar `--network-timeout 500000`<br><br>
+Tarda un monton. (puede ser porque el antivirus chequea todos los archivos. en el sition de yarn dice: "Please whitelist your project folder and the Yarn cache directory (%LocalAppData%\Yarn) in your antivirus software, otherwise installing packages will be significantly slower as every single file will be scanned as it’s written to disk.")<br><br>
 Chequear que estemos usando la "candy-machine-v2-cli.ts" con:
 
 ```
@@ -169,18 +172,16 @@ La estructura es:
 ```
 13) Colocar las foto y los archivos .json en una carpeta assets dentro de metaplex.<br><br>
 
-14) Desde la carpeta metaplex\js, instalar dependencias de yarn con: 
-`yarn install //Si no funciona se le puede agregar --network-timeout 500000  `<br><br>
-Tarda un monton. (puede ser porque el antivirus chequea todos los archivos. en el sition de yarn dice: "Please whitelist your project folder and the Yarn cache directory (%LocalAppData%\Yarn) in your antivirus software, otherwise installing packages will be significantly slower as every single file will be scanned as it’s written to disk.")<br><br>
+
 
 
 ## Deploy to CandyMachine <br><br>
 
-15) Antes de subir los nfts, chequear que este bien la metadata con:
+14) Antes de subir los nfts, chequear que este bien la metadata con:
 `ts-node .\packages\cli\src\candy-machine-v2-cli.ts verify_assets ..\assets`<br><br>
 Si sale bien solo chequear y no devuelve error
 
-16) Para subir el nft a la candy machine: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts upload -e devnet -k ..\..\wallet.json -cp ..\config.json -c cache ..\assets`<br><br>
+15) Para subir el nft a la candy machine: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts upload -e devnet -k ..\..\wallet.json -cp ..\config.json -c cache ..\assets`<br><br>
 Opciones: <br><br>
 -e : devnet /mainnet-beta, <br>
 -k :  ..\..\wallet.json, <br>
@@ -205,7 +206,7 @@ ended at: 2022-02-28T19:23:46.745Z. time taken: 00:00:53
 ```
 
 
-19) Verificar con: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts verify_upload -e devnet -k ..\..\wallet.json -c cache`<br>
+16) Verificar con: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts verify_upload -e devnet -k ..\..\wallet.json -c cache`<br>
 Debería dar algo asi para poder continuar: 
 ```
 wallet public key: asdasd
@@ -215,7 +216,7 @@ uploaded (1) out of (1)
 ready to deploy!
 ```
 
-20) Mintear el token con: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts mint_one_token -e devnet -k .\..\wallet.json -c cache`><br><br>
+17) Mintear el token con: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts mint_one_token -e devnet -k .\..\wallet.json -c cache`><br><br>
 Se puede usar también `ts-node candy-machine-v2-cli.ts mint_multiple_tokens -c cacheName -k ..\wallet.json -n 5`.<br>
 Debería dar:
 ```
@@ -256,9 +257,32 @@ Para ver las cuentas con detalle: `spl-token account -v`
 
 - `spl-token close -v TokenAccount` <br><br>
 
-## Hide and reveal 
+## Hide and reveal (hiddenSettings)
 
 <br>
+
+Fuente: https://www.youtube.com/watch?v=KJOWBc0V4sE&t=2000s
+
+Se pueden usar para minteos grandes donde no subimos todos los NFT al mismo momento que creamos la CM y el archivo ".cache".
+En nuestro caso lo usamos para generar el archivo ".cache", para subir nuestros assets a Arweave sin subirlos a la cadena de bloques.
+
+URI:
+No es el link a la imagen sino a la metadata que contiene la imagen.
+Stractors dice que para obtener el URI hay que primero deployar una candymachine con un solo asset. Así obtenemos el link de Arweave. Luego hacemos withdraw de la CM con lo cual queda obsoleta.
+
+HASH:
+Es un medio para comprobar que no estemos manipulando el archivo .cache . 
+Primero se deployea la CM con los assets que queremos reemplazar y con un hash arbitrario de 32 caracteres.
+
+Luego antes de ejecutar el comando  modificamos el archivo de configuracion y ponemos el cache que obtuvimos del deploy. Antes pasarlo por un SHA256 ENCODER.
+
+Antes de actualizarla podes copiar el contenido del archivo .cache y ponerlo en un codificador SHA256 y el resultado ponerlo en el campo HASH del archivo de configuracion.
+
+Luego actualizas con update_nfts_from_existing_cache_file 
+
+De este manera los compradores del NFT que obtendran los valores actualizados pueden comprobar si se uso  exactamente ese archivo .cache y no fue manipulado.
+
+Luego de hacer el deploy si utilizamos hiddenSettings y corremos el comando verify_upload fallará ya que nuestros tokens no estan en la cadena de bloques, enteonces el resultado sera "not all nfts checked out"
 
 - Bajar el repo https://github.com/MyNameisLeon/metaplex/tree/patch-1
 
@@ -293,10 +317,16 @@ En before:
 
 <br>
 
-Ejecutar el comando `ts-node candy-machine-v2-cli.ts update_existing_nfts_from_latest_cache_file -e devnet -nc after -c before -k ..\wallet.json 5`
+- Ejecutar el comando `ts-node candy-machine-v2-cli.ts update_existing_nfts_from_latest_cache_file -e devnet -nc after -c before -k ..\wallet.json 5`
 
-Ahora debería haberse reemplazado la imagen por la nueva
+- Ahora debería haberse reemplazado la imagen por la nueva<br><br>
 
+## Actualizar CandyMachine
+<br>
+
+`ts-node ./metaplex/js/packages/cli/src/candy-machine-v2-cli.ts update_candy_machine -e devnet -k <WALLET_KEYPAIR> -cp ./metaplex/config.json -c cache`
+<br><br>
+<mark>OJO en cache va el cache ANTERIOR! </mark>
 
 
 
