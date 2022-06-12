@@ -54,7 +54,7 @@ https://docs.solana.com/cli/install-solana-cli-tools
 <br><br>
 
 3) Abrir CMD con permisos de administrador y descargar el instalador de Solana en directorio temporal: <br>`curl https://release.solana.com/v1.9.9/solana-install-init-x86_64-pc-windows-msvc.exe --output C:\solana-install-tmp\solana-install-init.exe --create-dirs`<br><br>
-Instalar con:
+Instalar con:<br>
 `C:\solana-install-tmp\solana-install-init.exe v1.9.9`<br><br>
 Chequear instalación con:
 ```
@@ -67,9 +67,9 @@ Instalar actualizacioes con:
 ## Metaplex 
 <br>
 
-4) Clonar metaplex: `git clone https://github.com/metaplex-foundation/metaplex.git ./metaplex`
+4) Clonar metaplex:<br> `git clone https://github.com/metaplex-foundation/metaplex.git ./metaplex`
 
-5) Instalar dependencias desde fuera del repo con: `yarn install --cwd .\metaplex\js\` 
+5) Instalar dependencias desde fuera del repo con:<br> `yarn install --cwd .\metaplex\js\` 
 <br><br>
 Si no funciona se le puede agregar `--network-timeout 500000`<br><br>
 Tarda un monton. (puede ser porque el antivirus chequea todos los archivos. en el sition de yarn dice: "Please whitelist your project folder and the Yarn cache directory (%LocalAppData%\Yarn) in your antivirus software, otherwise installing packages will be significantly slower as every single file will be scanned as it’s written to disk.")<br><br>
@@ -80,15 +80,16 @@ ts-node .\metaplex\jspackages\cli\src\candy-machine-v2-cli.ts --version
 //output: 0.0.2
 ```
 <br>
-6) Crear una wallet con:
-`solana-keygen new --outfile ./.config/solana/devnet.json` ó crea una wallet cuya clave publica empieza con DEV `solana-keygen grind --starts-with DEV:1`<br><br>
+6) Crear una wallet con:<br>
+
+`solana-keygen new --outfile ./.config/solana/devnet.json`<br> ó crea una wallet cuya clave publica empieza con DEV <br>`solana-keygen grind --starts-with DEV:1`<br><br>
 
 
-7) Hacer que sea el keypair por default con: `solana config set --keypair ./.config/solana/nombredearchivo.json`<br><br>
+7) Hacer que sea el keypair por default con:<br> `solana config set --keypair ./.config/solana/nombredearchivo.json`<br><br>
 
-8) Setear la network a devnet: `solana config set --url https://metaplex.devnet.rpcpool.com/`<br><br>
+8) Setear la network a devnet:<br> `solana config set --url https://metaplex.devnet.rpcpool.com/`<br><br>
 
-Chequear configuracion con `solana config get` 
+Chequear configuracion con<br> `solana config get` 
 
 Debería dar algo asi:
 ```
@@ -99,10 +100,10 @@ Keypair Path: ~/.config/solana/devnet.json
 Commitment: confirmed
 ```
 
-9) Fondear la billetera con:
-`solana airdrop 1`<br>
+9) Fondear la billetera con:<br>
+`solana airdrop 1`<br><br>
 Si no funciona podemos ir a [SolFaucet](https://solfaucet.com/)<br>
-Para averiguar la direccion publica colocar: `solana address`
+Para averiguar la direccion publica colocar:<br> `solana address`
 
 10) Ir a phantom wallet para agregar la nueva billetera a la billetera previamente creada. "Añadir/vincular billetera". Importar clave privada. Pegar el contenido del archivo ubicado en "./.config/solana/nombredelarchivo.json" y agregar. Luego ir al simbolo de configuracion (ruedita, abajo a la derecha) y cambiar la red a devnet. Confirmar que tengamos 1 sol.<br><br>
 
@@ -177,11 +178,11 @@ La estructura es:
 
 ## Deploy to CandyMachine <br><br>
 
-14) Antes de subir los nfts, chequear que este bien la metadata con:
+14) Antes de subir los nfts, chequear que este bien la metadata con:<br>
 `ts-node .\packages\cli\src\candy-machine-v2-cli.ts verify_assets ..\assets`<br><br>
 Si sale bien solo chequear y no devuelve error
 
-15) Para subir el nft a la candy machine: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts upload -e devnet -k ..\..\wallet.json -cp ..\config.json -c cache ..\assets`<br><br>
+15) Para subir el nft a la candy machine:<br> `ts-node .\packages\cli\src\candy-machine-v2-cli.ts upload -e devnet -k ..\..\wallet.json -cp ..\config.json -c cache ..\assets`<br><br>
 Opciones: <br><br>
 -e : devnet /mainnet-beta, <br>
 -k :  ..\..\wallet.json, <br>
@@ -206,7 +207,7 @@ ended at: 2022-02-28T19:23:46.745Z. time taken: 00:00:53
 ```
 
 
-16) Verificar con: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts verify_upload -e devnet -k ..\..\wallet.json -c cache`<br>
+16) Verificar con:<br> `ts-node .\packages\cli\src\candy-machine-v2-cli.ts verify_upload -e devnet -k ..\..\wallet.json -c cache`<br>
 Debería dar algo asi para poder continuar: 
 ```
 wallet public key: asdasd
@@ -216,8 +217,8 @@ uploaded (1) out of (1)
 ready to deploy!
 ```
 
-17) Mintear el token con: `ts-node .\packages\cli\src\candy-machine-v2-cli.ts mint_one_token -e devnet -k .\..\wallet.json -c cache`><br><br>
-Se puede usar también `ts-node candy-machine-v2-cli.ts mint_multiple_tokens -c cacheName -k ..\wallet.json -n 5`.<br>
+17) Mintear el token con:<br> `ts-node .\packages\cli\src\candy-machine-v2-cli.ts mint_one_token -e devnet -k .\..\wallet.json -c cache`><br><br>
+Se puede usar también<br> `ts-node candy-machine-v2-cli.ts mint_multiple_tokens -c cacheName -k ..\wallet.json -n 5`.<br>
 Debería dar:
 ```
 wallet public key: asdazdfgasrtb
@@ -231,8 +232,8 @@ mint_one_token finished q4A6zbRBv3QVLjnmPGA6ho1tLXsmuCDPXXbZsdfvsdfgsdfgdsfg
 
 <br>
 
-- Primero setear la cuenta creadora con `solana config set -k .\wallet.json`
-- `ts-node .\packages\cli\src\candy-machine-v2-cli.ts sign_all -e devnet -k ..\..\wallet.json -c cacheName`
+- Primero setear la cuenta creadora con<br> `solana config set -k .\wallet.json`
+- Luego:<br>`ts-node .\packages\cli\src\candy-machine-v2-cli.ts sign_all -e devnet -k ..\..\wallet.json -c cacheName`
 
 <br>
 
@@ -246,16 +247,16 @@ mint_one_token finished q4A6zbRBv3QVLjnmPGA6ho1tLXsmuCDPXXbZsdfvsdfgsdfgdsfg
 
 <br>
 
-- `spl-token burn -v TokenAccount 1` Hay que poner la direccion de la TOKEN ACCOUNT, no del token, ni de la cuenta que holdea el token address
+- `spl-token burn -v TokenAccount 1` <br>Hay que poner la direccion de la TOKEN ACCOUNT, no la del mint (token en sí), tampoco la de la cuenta que holdea el token address
 <br><br>
-Para ver las cuentas con detalle: `spl-token account -v`
+Para sacar estos datos: `spl-token account -v`
 <br><br>
 
 ## Close account
 
 <br>
 
-- `spl-token close -v TokenAccount` <br><br>
+- `spl-token close -v MintAccount` (Token)<br><br>
 
 ## Hide and reveal (hiddenSettings)
 
